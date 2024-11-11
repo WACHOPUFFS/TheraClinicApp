@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="back-button" (click)="goBack()" >
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center pt-4">
+          <h5><strong>Secciones visibles de empresas</strong></h5>
+        </div>
+        <div class="card shadow-lg p-4 mt-4">
+          <ion-item>
+            <ion-label>Seleccionar empresa</ion-label>
+            <ion-select (ionChange)="onCompanyChange($event)" [(ngModel)]="selectedCompanyId" placeholder="Selecciona una empresa">
+              <ion-select-option *ngFor="let company of companies" [value]="company.idCompany">{{ company.nameCompany }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Asignar sección</ion-label>
+            <ion-select (ionChange)="onSectionChange($event)" [(ngModel)]="selectedSections" multiple="true" placeholder="Selecciona secciones">
+              <ion-select-option *ngFor="let section of sections" [value]="section">{{ section }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-button expand="full" (click)="addPermission()" [disabled]="!selectedCompanyId || !selectedSections || selectedSections.length === 0">Añadir</ion-button>
+        </div>
+        <ion-list class="list-group mt-4">
+          <ion-item *ngFor="let permission of permissions">
+            {{ permission.NameSection }}
+            <ion-button slot="end" color="danger" (click)="removePermission(permission.NameSection)">Quitar</ion-button>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+  </div>
+</ion-content>

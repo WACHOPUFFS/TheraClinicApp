@@ -1,0 +1,137 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-breadcrumbs>
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/project-control">Control de proyectos
+
+    </ion-breadcrumb>
+    <ion-breadcrumb routerLink="/assign-projects">Asignación de proyectos
+
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-center mb-4">
+      <h5><strong>Asignación de proyectos</strong></h5>
+    </div>
+
+    <!-- Diseño de dos columnas -->
+    <div class="row">
+      <!-- Columna izquierda fija con la información seleccionada -->
+      <div class="col-lg-4 col-md-5">
+        <div class="sticky-top p-3 mb-4 bg-light rounded shadow-sm">
+          <h6 class="fw-bold">Resumen de Selección</h6>
+          <p>Semana: {{ selectedSemana?.week_number || 'No seleccionada' }}</p>
+          <p>Día: {{ selectedDia || 'No seleccionado' }}</p>
+          <p>Obra: {{ selectedObra?.project_name || 'No seleccionada' }}</p>
+          <p>{{ selectedEmpleados.length }} empleado(s) seleccionado(s)</p>
+        </div>
+      </div>
+
+      <!-- Columna derecha con el formulario -->
+      <div class="col-lg-8 col-md-7">
+        <div class="card shadow-lg p-4 mb-4">
+          <div class="card-body">
+            <form>
+              <!-- Selector de semana laboral -->
+              <div class="mb-3">
+                <label for="semanaLaboral" class="form-label fw-bold">Selecciona la semana laboral:</label>
+                <ion-select [(ngModel)]="selectedSemana" (ngModelChange)="onSemanaChange($event)" interface="popover"
+                  id="semanaLaboral" name="semanaLaboral">
+                  <ion-select-option *ngFor="let semana of semanas" [value]="semana">{{ semana.week_number
+                    }}</ion-select-option>
+                </ion-select>
+              </div>
+
+              <!-- Período seleccionado -->
+              <div id="periodoSeleccionado" class="my-3">
+                <ion-text>
+                  Período seleccionado:
+                  <span>{{ formatDate(selectedSemana?.start_date) }}</span> -
+                  <span>{{ formatDate(selectedSemana?.end_date) }}</span>
+                </ion-text>
+              </div>
+
+              <!-- Selector de día de la semana con opción por defecto -->
+              <div class="mb-3">
+                <label for="diaSemana" class="form-label fw-bold">Selecciona el día de la semana:</label>
+                <ion-select [(ngModel)]="selectedDia" (ngModelChange)="onDiaChange($event)" interface="popover"
+                  id="diaSemana" name="diaSemana">
+                  <ion-select-option value="" disabled selected>Seleccionar</ion-select-option>
+                  <ion-select-option *ngFor="let dia of diasSemana" [value]="dia.date">{{ dia.display
+                    }}</ion-select-option>
+                </ion-select>
+                <p>Día: {{ selectedDia || 'No seleccionado' }}</p>
+              </div>
+
+              <!-- Selector de obra del día con opción por defecto -->
+              <div class="mb-3">
+                <div class="mb-3 d-flex align-items-center justify-content-between">
+                  <label for="obraDia" class="form-label fw-bold">Selecciona la obra:</label>
+                  <ion-searchbar [(ngModel)]="searchObra" placeholder="Buscar obra" showCancelButton="focus"
+                    (ionInput)="filterObras()" name="searchObra" class="custom-searchbar ms-auto"
+                    style="width: 70%;"></ion-searchbar>
+                </div>
+                <ion-select [(ngModel)]="selectedObra" (ngModelChange)="onObraChange($event)" interface="popover"
+                  id="obraDia" name="obraDia">
+                  <ion-select-option value="" disabled selected>Seleccionar</ion-select-option>
+                  <ion-select-option *ngFor="let obra of filteredObras" [value]="obra">{{ obra.project_name
+                    }}</ion-select-option>
+                </ion-select>
+              </div>
+
+              <!-- Fechas de la obra -->
+              <div class="mb-3">
+                <label for="fechasObra" class="form-label fw-bold">Fecha de la obra:</label>
+                <ion-text>
+                  <span *ngIf="selectedObra">
+                    {{ formatDate(selectedObra?.start_date) }} - {{ formatDate(selectedObra?.end_date) }}
+                  </span>
+                </ion-text>
+              </div>
+
+              <!-- Buscador de empleados -->
+              <div class="mb-3 d-flex align-items-center justify-content-between">
+                <label for="buscarEmpleado" class="form-label fw-bold">Seleccionar empleados:</label>
+                <ion-searchbar [(ngModel)]="searchEmployee" placeholder="Buscar empleado" showCancelButton="focus"
+                  (ionInput)="onSearchChange()" name="searchEmployee" class="custom-searchbar ms-auto"
+                  style="width: 70%;"></ion-searchbar>
+              </div>
+
+              <!-- Lista de empleados con barra deslizante sin bordes -->
+              <div class="mb-3" style="max-height: 200px; overflow-y: auto;">
+                <ion-list>
+                  <ion-item *ngFor="let empleado of filteredEmpleados"
+                    [style.color]="empleado.isAssigned ? 'gray' : 'black'">
+                    <ion-checkbox slot="start" (ionChange)="toggleEmpleadoSelection(empleado)"
+                      [checked]="selectedEmpleados.includes(empleado)" [disabled]="empleado.isAssigned"
+                      name="empleado{{empleado.employee_id}}"></ion-checkbox>
+                    <ion-label>{{ (empleado.first_name + ' ' + empleado.middle_name + ' ' +
+                      empleado.last_name).toUpperCase() }} - Fecha de alta: {{ empleado.start_date }}</ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
+
+              <!-- Botón para marcar todos los empleados no asignados -->
+              <div *ngIf="filteredEmpleados.length > 0" class="d-flex justify-content-center mb-3">
+                <ion-button color="tertiary" (click)="selectAllUnassignedEmployees()" fill="outline">
+                  Marcar Todos No Asignados
+                </ion-button>
+              </div>
+
+              <!-- Botón para asignar empleados -->
+              <div class="d-flex justify-content-center">
+                <ion-button expand="block" color="primary" class="rounded-pill shadow" (click)="assignEmployees()"
+                  [disabled]="!isFormValid()">
+                  Continuar
+                </ion-button>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

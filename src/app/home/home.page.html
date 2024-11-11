@@ -1,0 +1,143 @@
+<ion-menu contentId="main-content" type="overlay" class="custom-menu-width">
+    <ion-content class="menu-content">
+        <div class="profile-info p-4">
+            <div class="text-center mb-4">
+                <img [src]="currentAvatar" alt="Foto de Perfil" class="rounded-circle mb-2" width="100">
+                <h5 style="color: #8A9170;"><strong>Bienvenido(a), {{ username }}</strong></h5>
+                <p>Clínica: <span id="companyName">{{ authService.selectedCompany }}</span></p>
+                <p>RFC: <span id="companyRFC">{{ authService.selectedRFC }}</span></p>
+                <p>Nivel de Usuario:
+                    <span *ngIf="authService.selectedLevelUser === 'adminS'">Administrador senior de la página</span>
+                    <span *ngIf="authService.selectedLevelUser === 'adminE'">Administrador único de la empresa</span>
+                    <span *ngIf="authService.selectedLevelUser === 'admin'">Administrador de la empresa</span>
+                    <span *ngIf="authService.selectedLevelUser === 'adminU'">Administrativo de la empresa</span>
+                    <span *ngIf="authService.selectedLevelUser === 'superV'">Fisicoterapeuta de la empresa</span>
+                </p>
+            </div>
+            <div *ngIf="currentLogo" class="text-center mb-4">
+                <img [src]="currentLogo" alt="Logo de la Empresa" class="img-fluid" style="max-width: 150px;">
+            </div>
+            <div class="d-grid gap-2">
+                <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-menu>
+
+<ion-split-pane contentId="main-content">
+    <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+        <div class="header-container p-4">
+            <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <div class="img-user">
+                <img [src]="currentAvatar" alt="Foto de Perfil">
+            </div>
+            <div class="user-info">
+                <span style="color: #8A9170;"><strong>Bienvenido(a), {{ username }}</strong></span>
+                <span>Empresa: {{ authService.selectedCompany }}</span>
+                <span style="font-size: 12px; font-style: italic;">RFC: {{ authService.selectedRFC }}</span>
+            </div>
+            <div class="notification-button">
+                <ion-icon name="log-out-outline" (click)="logout()"></ion-icon>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h5 style="color: #8A9170;"><strong>Inicio</strong></h5>
+            <p class="current-date-time">{{ currentDateTime }}</p>
+
+            <!-- Sección de Apartados -->
+            <h5 class="pt-1" style="color: #8A9170; text-align: left; font-weight: bold; margin-bottom: 10px;">Mis
+                Apartados</h5>
+            <div class="app-grid mt-4">
+                <a routerLink="/employee-appointment" *ngIf="hasPermission('Sistema REPSE')" class="nav-card">
+                    <img src="/assets/icons/bandeja-de-entrada.png" alt="Sistema REPSE">
+                    <span>Gestionar citas</span>
+                </a>
+                <a routerLink="/project-control" *ngIf="hasPermission('Control de proyectos')" class="nav-card">
+                    <img src="/assets/icons/presentacion.png" alt="Control de Obras">
+                    <span>Gestión de insumos</span>
+                </a>
+                <a routerLink="/employee-control" *ngIf="hasPermission('Empleados') || hasPermission('Incidencias')"
+                    class="nav-card">
+                    <img src="/assets/icons/014-avatar-de-usuarios-1.png" alt="Gestión de Empleados">
+                    <span>Control de pacientes</span>
+                </a>
+                <a routerLink="/settings" class="nav-card">
+                    <img src="/assets/icons/002-ajustes.png" alt="Configuración">
+                    <span>Configuración</span>
+                </a>
+            </div>
+
+            <!-- Sección de Citas Más Recientes -->
+            <h5 style="color: #8A9170; font-weight: bold; margin-top: 20px;">Citas Más Recientes</h5>
+            <div *ngIf="recentAppointments.length > 0; else noAppointments">
+                <div class="app-grid mt-4">
+                    <div *ngFor="let appointment of recentAppointments" class="nav-card">
+                        <p><strong>Paciente:</strong> {{ appointment.employee_name}}</p>
+                        <p><strong>Terapeuta:</strong> {{ appointment.therapist_name}}</p>
+                        <p><strong>Fecha:</strong> {{ appointment.date }} - {{ appointment.time }}</p>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noAppointments>
+                <p>No hay citas recientes.</p>
+            </ng-template>
+
+
+            <!-- Resumen de Actividad -->
+            <h5 style="color: #8A9170; font-weight: bold; margin-top: 20px;">Resumen de Actividad</h5>
+            <div class="app-grid mt-4">
+                <div class="app-grid mt-4">
+                    <div class="nav-card">
+                        <h6>Total de citas este mes</h6>
+                        <canvas id="appointmentsChart"></canvas>
+                    </div>
+                    <div class="nav-card">
+                        <h6>Pacientes nuevos este mes</h6>
+                        <canvas id="newPatientsChart"></canvas>
+                    </div>
+                </div>
+
+              
+            </div>
+
+            <!-- Sección de Notificaciones -->
+            <h5 style="color: #8A9170; font-weight: bold; margin-top: 20px;">Notificaciones</h5>
+            <div class="app-grid mt-4">
+                <div *ngIf="notifications.length > 0; else noNotifications">
+                    <div *ngFor="let notification of notifications" class="nav-card">
+                        <p>{{ notification.message }}</p>
+                    </div>
+                </div>
+                <ng-template #noNotifications>
+                    <p>No tienes notificaciones.</p>
+                </ng-template>
+            </div>
+
+            <!-- Estadísticas de la Clínica -->
+            <h5 style="color: #8A9170; font-weight: bold; margin-top: 20px;">Estadísticas de la Clínica</h5>
+            <div class="app-grid mt-4">
+                <div class="nav-card">
+                    <ion-icon name="people-outline"></ion-icon>
+                    <p><strong>Citas esta semana:</strong> {{ appointmentsThisWeek }}</p>
+                </div>
+                <div class="nav-card">
+                    <ion-icon name="medkit-outline"></ion-icon>
+                    <p><strong>Pacientes atendidos:</strong> {{ patientsThisWeek }}</p>
+                </div>
+            </div>
+
+
+
+            <!-- Consejo de Bienestar -->
+            <h5 style="color: #8A9170; font-weight: bold; margin-top: 20px;">Consejo de Bienestar</h5>
+            <div class="app-grid mt-4">
+                <div class="nav-card wellness-tip">
+                    <p>{{ getDailyTip() }}</p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-split-pane>

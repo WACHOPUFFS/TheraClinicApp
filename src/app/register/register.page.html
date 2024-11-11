@@ -1,0 +1,157 @@
+<style>
+  .login-section {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.heading h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.heading p {
+  color: #777;
+}
+
+.ion-item {
+  --background: transparent;
+}
+
+.error-message {
+  color: #e74c3c;
+}
+
+.message {
+  color: #3498db;
+}
+
+.login-button {
+  background-color: #3498db;
+  border: none;
+  color: #fff;
+}
+
+.login-button:hover {
+  background-color: #2980b9;
+}
+
+</style>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{labelRegistrarSocioComercialRol}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="container-fluid d-flex align-items-center justify-content-center">
+  <div class="col-md-8">
+    <div class="login-section p-4 rounded-5 shadow">
+      <div class="heading text-center mb-4">
+        <h1>{{labelRegistrarSocioComercialRol}}</h1>
+        <p>{{labelIngreseDatosParaContinuar}}</p>
+      </div>
+      <div class="login-form">
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label>{{labelTipoRFC}}</ion-label>
+            <ion-select [(ngModel)]="tipoRFC" (ionChange)="onChangeTipoRFC()">
+              <ion-select-option value="fisica">{{labelPersonaFisica}}</ion-select-option>
+              <ion-select-option value="moral">{{labelPersonaMoral}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <div class="d-flex">
+            <ion-item class="flex-grow-1">
+              <ion-label position="floating">{{labelRFC}}</ion-label>
+              <ion-input name="rfc" type="text" required [(ngModel)]="usuario.rfc" (input)="validateRFC($event)"></ion-input>
+            </ion-item>
+            <ion-button class="ml-2" (click)="buscarEmpresaPorRFC()">Buscar</ion-button>
+          </div>
+          <div *ngIf="rfcLengthError" class="error-message mt-2">
+            {{ rfcLengthError }}
+          </div>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{ tipoRFC === 'fisica' ? 'Nombre de la persona física' : 'Nombre de la empresa' }}</ion-label>
+            <ion-input name="nombreEmpresa" type="text" required [(ngModel)]="usuario.nombreEmpresa"
+              (ngModelChange)="showMessage()" (ionBlur)="hideMessage()" (ionFocus)="resetMessage()"></ion-input>
+          </ion-item>
+          <div *ngIf="showMessageFlag" class="message mt-2">
+            {{labelComoApareceConstanciaFiscal}}
+          </div>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelAliasUsuario}}</ion-label>
+            <ion-input name="nombreU" type="text" required [(ngModel)]="usuario.nombreUsuario"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelNombreCompletoUsuario}}</ion-label>
+            <ion-input name="nombreC" type="text" required [(ngModel)]="usuario.nombreCompleto"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelCorreo}}</ion-label>
+            <ion-input name="correoElectronico" type="email" required [(ngModel)]="usuario.correo"></ion-input>
+          </ion-item>
+          <div *ngIf="usuario.correo && (!usuario.correo.includes('@') || !isValidEmail(usuario.correo))" class="error-message mt-2">
+            {{labelValidacionCorreo}}
+          </div>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">Número de teléfono</ion-label>
+            <ion-input name="numeroTelefonico" type="text" required [(ngModel)]="usuario.numTelefonico" maxlength="10"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelContrasena}}</ion-label>
+            <ion-input name="contrasena" type="password" required [(ngModel)]="usuario.contrasena"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelConfirmarContrasena}}</ion-label>
+            <ion-input name="confirmarContrasena" type="password" required [(ngModel)]="usuario.confirmarContrasena"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label>{{labelTipoUsuario}}</ion-label>
+            <ion-select [(ngModel)]="usuario.roleInCompany">
+              <ion-select-option value="cliente">{{labelCliente}}</ion-select-option>
+              <ion-select-option value="proveedor">{{labelProveedor}}</ion-select-option>
+              <ion-select-option value="clienteProveedor">{{labelClienteProveedor}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelFechaInicioPeriodo}}</ion-label>
+            <ion-input name="fechaInicio" type="date" required [(ngModel)]="usuario.fechaInicio"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-input mb-3">
+          <ion-item>
+            <ion-label position="floating">{{labelFechaFinPeriodo}}</ion-label>
+            <ion-input name="fechaFin" type="date" required [(ngModel)]="usuario.fechaFin"></ion-input>
+          </ion-item>
+        </div>
+        <div class="action-button text-center mt-4">
+          <ion-button size="large" class="login-button" [disabled]="!camposCompletos()" (click)="registrarUsuario()">{{ButtonRegistrar}}</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

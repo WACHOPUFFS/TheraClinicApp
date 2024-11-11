@@ -1,0 +1,54 @@
+<ion-split-pane contentId="main-content">
+  <!-- Contenido principal -->
+  <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+    <ion-breadcrumbs>
+      <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/settings">Configuración de mi empresa</ion-breadcrumb>
+    </ion-breadcrumbs>
+    <div class="back-button" (click)="goBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </div>
+    <!-- Contenido principal de la página -->
+    <div class="main-content">
+      <div class="pt-4">
+        <h5><strong>Configuración de mi empresa</strong></h5>
+      </div>
+      <div class="app-grid mt-4">
+
+        <a routerLink="/upload-logo" *ngIf="sharedService.hasPermission('Configuracion de mi empresa', 'Asignar logo de la empresa') ">
+          <img src="/assets/icons/008-imagen.png" alt="Assign Logo" style="height: 60px;">
+          <span>Asignar logo</span>
+        </a>
+        <a routerLink="/code-company" *ngIf=" sharedService.hasPermission('Configuracion de mi empresa', 'Código de la empresa') ">
+          <img src="/assets/icons/009-nota.png" alt="Assign Logo" style="height: 60px;">
+          <span>código de mi empresa</span>
+        </a>
+
+        <a routerLink="/department-management" *ngIf=" sharedService.hasPermission('Configuracion de mi empresa', 'Departamentos') ">
+          <img src="/assets/icons/carpeta.png" alt="Visible Sections" style="height: 60px;">
+          <span>Mis departamentos</span>
+        </a>
+
+        <a routerLink="/initial-setup"
+          *ngIf="sharedService.hasPermission('Configuracion de mi empresa', 'Configuración inicial de períodos')">
+          <img src="/assets/icons/012-calendario-reloj.png" alt="Visible Sections" style="height: 60px;">
+          <span>Configuracion inicial de periodos</span>
+        </a>
+        <a routerLink="/period-configuration"
+        *ngIf="sharedService.hasPermission('Configuracion de mi empresa', 'Tipos de período')">
+         <img src="/assets/icons/010-calendario-mas.png" alt="Visible Sections" style="height: 60px;">
+          <span>Tipos de periodos</span>
+        </a>
+
+        <a routerLink="/period-management"
+        *ngIf="sharedService.hasPermission('Configuracion de mi empresa', 'Catálogo de períodos')">
+        <img src="/assets/icons/011-fecha-del-calendario.png" alt="Visible Sections" style="height: 60px;">
+          <span>Catalogo de periodos</span>
+        </a>
+
+      </div>
+    </div>
+
+  </ion-content>
+</ion-split-pane>

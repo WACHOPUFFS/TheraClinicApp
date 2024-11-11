@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-breadcrumbs>
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/company-settings">Configuración de mi empresa</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/upload-logo">Subir Logo de Empresa</ion-breadcrumb>
+  </ion-breadcrumbs>
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center pt-4">
+          <h5><strong>Subir Logo de Empresa</strong></h5>
+        </div>
+        <div class="card shadow-lg p-4">
+          <div class="card-body text-center">
+            <ion-item *ngIf="currentLogo" class="mb-3">
+              <ion-label>Logo actual:</ion-label>
+              <img [src]="currentLogo" alt="Logo actual" class="img-thumbnail mt-2" width="100">
+            </ion-item>
+
+            <ion-item class="mb-3">
+              <ion-label>Seleccionar nuevo logo:</ion-label>
+              <input type="file" accept="image/*" (change)="onFileSelected($event)" class="form-control">
+            </ion-item>
+
+            <ion-item *ngIf="previewLogo" class="mb-3">
+              <ion-label>Nuevo logo:</ion-label>
+              <img [src]="previewLogo" alt="Nuevo logo" class="img-thumbnail mt-2" width="100">
+            </ion-item>
+
+            <ion-button expand="block" class="btn-primary mt-4" (click)="uploadLogo()">Subir</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

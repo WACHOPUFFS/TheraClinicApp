@@ -1,0 +1,45 @@
+<ion-split-pane contentId="main-content">
+  <!-- Contenido principal -->
+  <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+    <ion-breadcrumbs>
+      <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/employee-control">Control de empleados
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+    <div class="back-button" (click)="goBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </div>
+    <!-- Contenido principal de la página -->
+    <div class="main-content">
+      <div class="pt-4">
+        <h5><strong>Control de empleados</strong></h5>
+      </div>
+      <div class="app-grid mt-4">
+        <a routerLink="/add-employee"
+          *ngIf="sharedService.hasPermission('Empleados', 'Registrar solicitudes de empleados')">
+          <img src="/assets/image/imagen.png" alt="Assign Logo" style="height: 60px;">
+          <span>Registrar solicitudes de pacientes</span>
+        </a>
+        <a routerLink="/edit-employee"
+          *ngIf="sharedService.hasPermission('Empleados', 'Aceptar solicitudes de empleados')">
+          <img src="/assets/image/seguidores.png" alt="Register Additional User" style="height: 60px;">
+          <span>Aceptar solicitudes de pacientes</span>
+        </a>
+        <a routerLink="/edit-employee"
+          *ngIf="sharedService.hasPermission('Empleados', 'Editar solicitudes de empleados')">
+          <img src="/assets/image/seguidores.png" alt="Register Additional User" style="height: 60px;">
+          <span>Editar solicitudes de pacientes</span>
+        </a>
+        <a routerLink="/edit-employee"
+          *ngIf="sharedService.hasPermission('Empleados', 'Procesar empleados')">
+          <img src="/assets/image/seguidores.png" alt="Register Additional User" style="height: 60px;">
+          <span>Procesar pacientes</span>
+        </a>
+        <a routerLink="/employee-view" *ngIf="sharedService.hasPermission('Empleados', 'Ver empleados registrados')">
+          <img src="/assets/image/imagen.png" alt="Assign Logo" style="height: 60px;">
+          <span>Ver pacientes registrados</span>
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-split-pane>

@@ -1,0 +1,7 @@
+{
+  "name": "REPSEApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

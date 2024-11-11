@@ -1,0 +1,42 @@
+<ion-split-pane contentId="main-content">
+  <!-- Contenido principal -->
+  <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+    <ion-breadcrumbs>
+      <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+    </ion-breadcrumbs>
+    <div class="back-button" (click)="goBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </div>
+    <!-- Contenido principal de la página -->
+    <div class="main-content">
+      <div class="pt-4">
+        <h5><strong>Configuraciones</strong></h5>
+      </div>
+      <div class="app-grid mt-4">
+        <a routerLink="/company-settings" *ngIf="hasPermission('Configuracion de mi empresa')">
+          <img src="/assets/icons/003-edificio.png" alt="Assign Logo" style="height: 60px;">
+          <span>Configuración de mi empresa</span>
+        </a>
+        <a routerLink="/user-permissions-sections" *ngIf="['adminS', 'adminE', 'adminEE', 'adminPE'].includes(authService.selectedLevelUser)">
+          <img src="/assets/icons/004-avatar-de-usuario-1.png" alt="Assign Logo" style="height: 60px;">
+          <span>Secciones visibles de perfiles</span>
+        </a>
+        
+        <a routerLink="/business-partner-settings" *ngIf="hasPermission('Configuracion de socios comerciales')">
+          <img src="/assets/icons/005-tienda.png" alt="Assign Logo" style="height: 60px;">
+          <span>Configuración de socios comerciales</span>
+        </a>
+        <a routerLink="/site-settings" *ngIf="authService.selectedLevelUser === 'adminS'">
+          <img src="/assets/icons/computadora-de-escritorio.png" alt="Assign Logo" style="height: 60px;">
+          <span>Configuración de sitio</span>
+        </a>
+        <a routerLink="/users-settings" *ngIf="hasPermission('Configuracion de usuarios')">
+          <img src="/assets/icons/006-avatar-de-usuarios.png" alt="Assign Logo" style="height: 60px;">
+          <span>Configuración de usuarios</span>
+        </a>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-split-pane>

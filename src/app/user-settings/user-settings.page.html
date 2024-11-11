@@ -1,0 +1,124 @@
+
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back" ></ion-icon>
+  </div>
+  <div class="text-center pt-4">
+    <h5><strong>Configurar mi perfil</strong></h5>
+  </div>
+  <div class="container mt-4">
+    <div class="card shadow-lg p-4 mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-center mb-4">
+          <h5><strong>Change Profile Picture</strong></h5>
+        </div>
+        <div class="d-flex justify-content-center mb-4">
+          <ion-avatar>
+            <img [src]="avatar || 'assets/img/default-avatar.png'" id="profilePic" alt="Profile Picture">
+          </ion-avatar>
+        </div>
+        <div class="d-flex justify-content-center mb-4">
+          <ion-button fill="outline">
+            <input type="file" (change)="changeProfilePicture($event)" />
+          </ion-button>
+        </div>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input id="fullName" name="fullName" type="text" class="form-control" [(ngModel)]="fullName" placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-group">
+          <label for="userName">Username</label>
+          <input id="userName" name="userName" type="text" class="form-control" [(ngModel)]="userName" placeholder="Enter your username">
+        </div>
+        
+        <div class="form-group">
+          <label for="userEmail">Email</label>
+          <input id="userEmail" name="userEmail" type="email" class="form-control" [(ngModel)]="userEmail" placeholder="Enter your email">
+        </div>
+        
+        <div class="form-group">
+          <label for="userPassword">Password</label>
+          <input id="userPassword" name="userPassword" type="password" class="form-control" [(ngModel)]="userPassword" placeholder="Enter your password">
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" [(ngModel)]="confirmPassword" placeholder="Confirm your password">
+        </div>
+        
+        <div class="text-center mt-4">
+          <button class="btn btn-primary" (click)="saveSettings()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<style>
+  .container {
+    max-width: 600px;
+  }
+
+  .card {
+    border-radius: 10px;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .d-flex {
+    display: flex !important;
+  }
+
+  .justify-content-center {
+    justify-content: center !important;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Estilo para el botón de regreso */
+  .back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+</style>

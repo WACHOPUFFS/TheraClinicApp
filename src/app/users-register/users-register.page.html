@@ -1,0 +1,161 @@
+<ion-content [fullscreen]="true">
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <!-- Botón de regreso -->
+      <ion-breadcrumbs>
+        <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/users-settings">Configuración de usuarios</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/users-register">Registrar Usuarios</ion-breadcrumb>
+      </ion-breadcrumbs>
+      <div class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </div>
+
+      <div class="col-md-10 col-lg-8">
+        <div class=" text-center pt-4">
+          <h5><strong>Registrar Usuarios</strong></h5>
+        </div>
+        <!-- Selector de modo de registro -->
+        <ion-segment [(ngModel)]="registerMode" class="mb-4">
+          <ion-segment-button value="register">
+            Registro Manual
+          </ion-segment-button>
+          <ion-segment-button value="code">
+            Agregar por Código
+          </ion-segment-button>
+        </ion-segment>
+
+        <!-- Contenido del modo de registro manual -->
+        <div *ngIf="registerMode === 'register'" class="row">
+          <div class="col-lg-6">
+            <!-- Formulario de registro manual -->
+            <div class="card shadow-lg p-4 mb-4">
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ labelRegistrarCuentaUsuarioEmpresa }}</h5>
+                <p class="text-center">{{ labelIngreseDatosParaContinuar }}</p>
+                <form>
+                  <div class="form-group">
+                    <label for="nombreU">{{ labelAliasUsuario }}</label>
+                    <input id="nombreU" name="nombreU" type="text" class="form-control" required
+                      [(ngModel)]="usuario.nombreUsuario">
+                  </div>
+                  <div class="form-group">
+                    <label for="nombreC">{{ labelNombreCompletoUsuario }}</label>
+                    <input id="nombreC" name="nombreC" type="text" class="form-control" required
+                      [(ngModel)]="usuario.nombreCompleto">
+                  </div>
+                  <div class="form-group">
+                    <label for="correoElectronico">{{ labelCorreo }}</label>
+                    <input id="correoElectronico" name="correoElectronico" type="email" class="form-control" required
+                      [(ngModel)]="usuario.correo">
+                    <div *ngIf="usuario.correo && (!usuario.correo.includes('@') || !isValidEmail(usuario.correo))"
+                      class="error-message text-danger">
+                      {{ labelValidacionCorreo }}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="contrasena">{{ labelContrasena }}</label>
+                    <input id="contrasena" name="contrasena" type="password" class="form-control" required
+                      [(ngModel)]="usuario.contrasena">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmarContrasena">{{ labelConfirmarContrasena }}</label>
+                    <input id="confirmarContrasena" name="confirmarContrasena" type="password" class="form-control"
+                      required [(ngModel)]="usuario.confirmarContrasena">
+                  </div>
+                  <div class="form-group">
+                    <label for="tipoUsuario">{{ labelTipoUsuario }}</label>
+                    <select id="tipoUsuario" class="form-control" [(ngModel)]="usuario.levelUser" name="levelUser">
+                      <ng-container *ngIf="authService.selectedLevelUser === 'adminS'">
+                        <option value="admin">{{ labelAdministrador }}</option>
+                        <option value="superV">{{ labelSupervisor }}</option>
+                        <option value="adminU">{{ labelAdministrativo }}</option>
+                      </ng-container>
+                      <ng-container *ngIf="authService.selectedLevelUser !== 'adminS'">
+                        <option value="admin">{{ labelAdministrador }}</option>
+                        <option value="superV">{{ labelSupervisor }}</option>
+                        <option value="adminU">{{ labelAdministrativo }}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+                  <div class="text-center mt-4">
+                    <button class="btn btn-primary" [disabled]="!camposCompletos()" (click)="registrarUsuario()">
+                      {{ ButtonRegistrar }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card para buscar usuarios -->
+          <div class="col-lg-6">
+            <div class="card shadow-lg p-4 mb-4">
+              <div class="card-body">
+                <h5 class="card-title text-center">Buscar usuarios</h5>
+                <div class="form-group mb-4">
+                  <input type="text" class="form-control mb-2" [(ngModel)]="filtroUsuarios"
+                    placeholder="Buscar usuarios por nombre" name="filtroUsuarios">
+                  <select class="form-control mb-2" [(ngModel)]="filtroRol" name="filtroRol">
+                    <option value="">Todos los roles</option>
+                    <option value="admin">Administrador</option>
+                    <option value="superV">Supervisor</option>
+                    <option value="adminU">Administrativo</option>
+                  </select>
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary btn-block" (click)="buscarUsuarios()">Buscar</button>
+                  </div>
+                </div>
+                <ul class="list-group scrollable">
+                  <li *ngFor="let employee of filteredEmployees; let i = index"
+                    class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ i + 1 }}. {{ employee.username }} - {{ employee.name }} - {{ getRolLegible(employee.role)
+                      }}</span>
+                    <button *ngIf="employee.id !== authService.userId && employee.role !== 'adminE'"
+                      class="btn btn-danger btn-sm delete-button"
+                      (click)="eliminarUsuario(employee.id)">Eliminar</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para agregar usuario por código -->
+        <div *ngIf="registerMode === 'code'" class="card shadow-lg p-4">
+          <div class="card-body">
+            <ion-item>
+              <ion-label>Ingrese Código de Usuario</ion-label>
+              <ion-input [(ngModel)]="userCode" (ionBlur)="onUserCodeChange()"></ion-input>
+            </ion-item>
+
+            <ion-item *ngIf="selectedUser">
+              <ion-label>Nombre del Usuario:</ion-label>
+              <ion-text>{{ selectedUser.name }}</ion-text>
+            </ion-item>
+
+            <ion-item *ngIf="selectedUser">
+              <ion-label>Correo Electrónico:</ion-label>
+              <ion-text>{{ selectedUser.email }}</ion-text>
+            </ion-item>
+
+            <ion-item *ngIf="selectedUser">
+              <ion-label>Seleccione Nivel de Usuario</ion-label>
+              <ion-select [(ngModel)]="selectedLevelUser">
+                <ion-select-option *ngFor="let level of levelUsers" [value]="level.id">
+                  {{ level.levelUserName }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-button expand="block" class="btn btn-primary mt-4" *ngIf="selectedUser && selectedLevelUser"
+              (click)="assignCompanyToUser()">
+              Asignar Empresa Secundaria
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

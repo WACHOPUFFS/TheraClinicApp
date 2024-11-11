@@ -1,0 +1,140 @@
+<ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center pt-4">
+          <h5><strong>Administrar secciones a usuarios de la empresa</strong></h5>
+        </div>
+        <div class="card shadow-lg p-4 mt-4">
+          <ion-item>
+            <ion-label>Filtrar por tipo de usuario</ion-label>
+            <ion-select id="userTypeSelect" [(ngModel)]="selectedUserType" (ionChange)="onUserTypeChange($event)">
+              <ion-select-option value="all">Todos</ion-select-option>
+              <ion-select-option *ngFor="let userType of userTypes" [value]="userType.levelUserName">{{
+                userType.levelUserName }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Seleccionar usuario</ion-label>
+            <ion-select id="userSelect" [(ngModel)]="selectedUserId" (ionChange)="onUserChange($event)">
+              <ion-select-option *ngFor="let user of filteredUsers" [value]="user.id">{{ user.name
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Asignar sección</ion-label>
+            <ion-select id="sectionSelect" [(ngModel)]="selectedSection" (ionChange)="onSectionChange($event)">
+              <ion-select-option *ngFor="let section of sections" [value]="section">{{ section }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Primer conjunto de subapartados para roles diferentes de proveedor o cliente -->
+          <ion-item
+            *ngIf="subSections.length > 0 && authService.selectedRole !== 'proveedor' && authService.selectedRole !== 'cliente'">
+            <ion-label>Asignar subapartado(s)</ion-label>
+            <ion-select id="subSectionSelect" [(ngModel)]="selectedSubSections" multiple>
+              <ion-select-option *ngFor="let subSection of subSections" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Segundo conjunto de subapartados específico para proveedores -->
+          <ion-item *ngIf="subSectionsProvider.length > 0 && authService.selectedRole === 'proveedor'">
+            <ion-label>Asignar subapartado(s) para proveedor</ion-label>
+            <ion-select id="subSectionSelectProvider" [(ngModel)]="selectedSubSectionsProvider" multiple>
+              <ion-select-option *ngFor="let subSection of subSectionsProvider" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Tercer conjunto de subapartados específico para clientes -->
+          <ion-item *ngIf="subSectionsClient.length > 0 && authService.selectedRole === 'cliente'">
+            <ion-label>Asignar subapartado(s) para cliente</ion-label>
+            <ion-select id="subSectionSelectClient" [(ngModel)]="selectedSubSectionsClient" multiple>
+              <ion-select-option *ngFor="let subSection of subSectionsClient" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-button expand="block" class="btn-primary mt-3" (click)="addPermission()">Añadir</ion-button>
+        </div>
+        <ion-list class="list-group mt-4">
+          <ion-item *ngFor="let permission of permissions" class="d-flex justify-content-between align-items-center">
+            {{ permission.section }} - {{ permission.subSection || 'Sin subapartado' }}
+            <ion-button slot="end" class="btn-danger"
+              (click)="removePermission(permission.section, permission.subSection)">Quitar</ion-button>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<style>
+  .container {
+    max-width: 800px;
+  }
+
+  .card {
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+
+  .list-group-item {
+    border: none;
+    padding: 10px 0;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-button:hover {
+    color: #0056b3;
+  }
+</style>

@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true">
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <!-- Botón de regreso -->
+      <ion-breadcrumbs>
+        <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/users-settings">Configuración de usuarios</ion-breadcrumb>
+        <ion-breadcrumb routerLink="/user-edit">Editar mi usuario</ion-breadcrumb>
+      </ion-breadcrumbs>
+      <div class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </div>
+
+      <div class="col-md-10 col-lg-8">
+        <div class=" text-center pt-4">
+          <h5><strong>Editar mi usuario</strong></h5>
+        </div>
+        <!-- Selector de modo -->
+        <ion-segment [(ngModel)]="editMode" class="mb-4">
+          <ion-segment-button value="edit">
+            Editar Perfil
+          </ion-segment-button>
+          <ion-segment-button value="code">
+            Mi Código
+          </ion-segment-button>
+        </ion-segment>
+
+        <!-- Formulario de edición de perfil -->
+        <div *ngIf="editMode === 'edit'" class="card shadow-lg p-4">
+          <div class="card-body">
+            <h5 class="card-title text-center">Editar Perfil del Usuario</h5>
+
+            <!-- Sección para cambiar la imagen de perfil -->
+            <div class="text-center ion-padding">
+              <ion-avatar style="display: block; margin: auto;">
+                <img [src]="avatar || 'assets/img/default-avatar.png'" alt="Imagen de perfil">
+              </ion-avatar>
+              <input type="file" hidden (change)="changeProfilePicture($event)" #fileInput>
+              <ion-button expand="full" (click)="fileInput.click()">Cambiar Imagen de Perfil</ion-button>
+            </div>
+
+            <!-- Formulario para los datos del usuario -->
+            <form>
+              <ion-item>
+                <ion-label position="floating">Nombre completo</ion-label>
+                <ion-input [(ngModel)]="fullName" name="fullName" required type="text"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Nombre de usuario</ion-label>
+                <ion-input [(ngModel)]="userName" name="userName" required type="text"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Correo electrónico</ion-label>
+                <ion-input [(ngModel)]="userEmail" name="userEmail" required type="email"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Contraseña</ion-label>
+                <ion-input [(ngModel)]="userPassword" name="userPassword" type="password"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Confirmar contraseña</ion-label>
+                <ion-input [(ngModel)]="confirmPassword" name="confirmPassword" type="password"></ion-input>
+              </ion-item>
+
+              <ion-button expand="full" class="mt-4" (click)="saveSettings()">Guardar Cambios</ion-button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Sección para generar y compartir código -->
+        <div *ngIf="editMode === 'code'" class="card shadow-lg p-4">
+          <div class="card-body">
+            <ion-item>
+              <ion-label>Código Generado:</ion-label>
+              <ion-input [value]="generatedCode" readonly></ion-input>
+            </ion-item>
+            <ion-button (click)="shareCode()" *ngIf="generatedCode">Compartir Código</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

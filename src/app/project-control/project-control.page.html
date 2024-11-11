@@ -1,0 +1,48 @@
+<ion-split-pane contentId="main-content">
+  <!-- Contenido principal -->
+  <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+    <ion-breadcrumbs>
+      <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/project-control">Control de proyectos
+
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+    <div class="back-button" (click)="goBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </div>
+    <!-- Contenido principal de la página -->
+    <div class="main-content">
+      <div class="pt-4">
+        <h5><strong>Control de proyectos</strong></h5>
+      </div>
+
+      <div class="app-grid mt-4">
+        <a routerLink="/assign-projects"
+        *ngIf="sharedService.hasPermission('Control de proyectos', 'Asignacion de proyectos')">
+          <img src="/assets/image/imagen.png" alt="Assign Logo" style="height: 60px;">
+          <span>Asignación de proyectos</span>
+        </a>
+        <a routerLink="/confirm-day"
+        *ngIf="sharedService.hasPermission('Control de proyectos', 'Registro de proyectos')">
+          <img src="/assets/image/seguidores.png" alt="Register Additional User" style="height: 60px;">
+          <span>Registro de proyectos</span>
+        </a>
+        <a routerLink="/confirm-week"
+        *ngIf="sharedService.hasPermission('Control de proyectos', 'Vizualizar proyectos')">
+          <img src="/assets/image/imagen.png" alt="Assign Logo" style="height: 60px;">
+          <span>Vizualizar proyectos</span>
+        </a>
+        <a routerLink="/process-weekly-lists"
+        *ngIf="sharedService.hasPermission('Control de proyectos', 'Seguimiento de proyectos')">
+          <img src="/assets/image/interfaz-de-usuario.png" alt="Visible Sections" style="height: 60px;">
+          <span>Seguimiento de proyectos</span>
+        </a>
+        <a routerLink="/processed-attendance"
+        *ngIf="sharedService.hasPermission('Control de proyectos', 'Seguimiento de proyectos')">
+          <img src="/assets/image/interfaz-de-usuario.png" alt="Visible Sections" style="height: 60px;">
+          <span>Seguimiento de proyectos</span>
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-split-pane>

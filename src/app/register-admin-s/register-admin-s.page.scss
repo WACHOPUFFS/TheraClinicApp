@@ -1,0 +1,137 @@
+.login-section {
+   
+  
+    .heading {
+      margin-bottom: 20px;
+  
+      h1 {
+        font-size: 1.2rem; /* Ajuste de tamaño de fuente */
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+  
+      p {
+        font-size: 0.9rem; /* Ajuste de tamaño de fuente */
+        color: #666;
+      }
+    }
+  
+    .login-form {
+      ion-item {
+        margin-bottom: 15px;
+      }
+  
+      ion-label {
+        font-size: 0.9rem; /* Ajuste de tamaño de fuente */
+      }
+  
+      ion-input {
+        font-size: 0.9rem; /* Ajuste de tamaño de fuente */
+      }
+  
+      ion-icon {
+        font-size: 1.2rem; /* Ajuste de tamaño de icono */
+        color: #666;
+        margin-right: 5px;
+      }
+    }
+  
+    .action-button {
+      ion-button {
+        width: 100%;
+        font-size: 0.9rem; /* Ajuste de tamaño de fuente */
+        font-weight: bold;
+      }
+    }
+  }
+  
+  ion-title {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .login-section {
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .heading h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  .heading p {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .form-input {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-input ion-item {
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    --background: none;
+  }
+
+  .form-input ion-label {
+    color: #888;
+  }
+
+  .form-input ion-input {
+    --padding-start: 0;
+  }
+
+  .login-button {
+    width: 100%;
+    background-color: #007bff;
+    border-radius: 4px;
+    color: white;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+  }
+
+  .login-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+  }
+
+  .message {
+    color: #007bff;
+    font-size: 0.875rem;
+  }
+
+    /* Estilo para el botón de regreso */
+    .back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-button:hover {
+    color: #0056b3;
+  }

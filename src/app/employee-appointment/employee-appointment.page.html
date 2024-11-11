@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="text-center">Gestión de Citas de Terapia Física</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Formulario para Crear o Editar Cita -->
+  <div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">{{ isEditMode ? 'Editar Cita' : 'Agendar Nueva Cita' }}</h5>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="createOrUpdateAppointment()">
+          <div class="form-group">
+            <label for="employee">Empleado</label>
+            <select id="employee" class="form-control" [(ngModel)]="appointment.employeeId" name="employeeId" required>
+              <option *ngFor="let employee of employees" [value]="employee.employee_id">
+                {{ employee.first_name }} {{ employee.last_name }}
+              </option>
+            </select>
+            <small *ngIf="appointment.employeeName">Seleccionado: {{ appointment.employeeName }}</small>
+          </div>
+          
+          <!-- Terapeuta Seleccionado -->
+          <div class="form-group mt-3">
+            <label for="therapist">Terapeuta</label>
+            <select id="therapist" class="form-control" [(ngModel)]="appointment.therapistId" name="therapistId" required>
+              <option *ngFor="let therapist of therapists" [value]="therapist.id">
+                {{ therapist.name }}
+              </option>
+            </select>
+            <small *ngIf="appointment.therapistName">Seleccionado: {{ appointment.therapistName }}</small>
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="therapyType">Tipo de Terapia</label>
+            <select id="therapyType" class="form-control" [(ngModel)]="appointment.therapyType" name="therapyType" required>
+              <option value="Hidroterapia">Hidroterapia</option>
+              <option value="Electroterapia">Electroterapia</option>
+              <option value="Masoterapia">Masoterapia</option>
+              <option value="Estimulación Sensorial">Estimulación Sensorial</option>
+              <option value="Mecanoterapia">Mecanoterapia</option>
+            </select>
+          </div>
+          
+          <div class="form-group mt-3">
+            <label for="date">Fecha</label>
+            <input type="date" id="date" class="form-control" [(ngModel)]="appointment.date" name="date" required />
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="time">Hora</label>
+            <input type="time" id="time" class="form-control" [(ngModel)]="appointment.time" name="time" required />
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="notes">Observaciones</label>
+            <textarea id="notes" class="form-control" rows="3" [(ngModel)]="appointment.notes" name="notes"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block mt-4" 
+            [disabled]="!appointment.employeeId || !appointment.therapistId || !appointment.date || !appointment.time">
+            {{ isEditMode ? 'Guardar Cambios' : 'Agendar Cita' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de Citas Existentes -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Listado de Citas</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li *ngFor="let appt of appointments" class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">{{ appt.date }} - {{ appt.time }}</h6>
+              <small>{{ appt.employeeName }} con {{ appt.therapistName }}</small>
+            </div>
+            <div>
+              <button class="btn btn-outline-primary btn-sm mr-2" (click)="editAppointment(appt)">Editar</button>
+              <button class="btn btn-outline-danger btn-sm" (click)="deleteAppointment(appt.id!)">Eliminar</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- CSS para estilos personalizados -->
+<style>
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .card {
+    border-radius: 8px;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+  }
+
+  .card-header {
+    font-size: 1.1rem;
+  }
+
+  .list-group-item {
+    padding: 15px;
+  }
+</style>

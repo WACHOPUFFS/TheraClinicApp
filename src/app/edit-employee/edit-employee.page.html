@@ -1,0 +1,191 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-breadcrumbs>
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/employee-control">Control de pacientes
+    </ion-breadcrumb>
+    <ion-breadcrumb routerLink="/edit-employee">Editar solicitudes de pacientes
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <!-- Columna izquierda con contenido adicional -->
+      <ion-col size="12" size-md="3" class="left-column">
+        <div class="container mt-4">
+          <!-- Columna con la lista de solicitudes de empleado registradas en los últimos 15 días -->
+          <div class="side-content">
+            <div class="d-flex justify-content-center mb-4">
+              <h5><strong>Solicitudes Registradas (Últimos 15 días)</strong></h5>
+            </div>
+            <ion-list>
+              <ion-item *ngFor="let solicitud of solicitudes">
+                <ion-label>
+                  <h2>Folio: {{ solicitud.request_id }}</h2>
+                  <p>Paciente: {{ solicitud.full_name }}</p>
+                  <p>Estado: {{ getStatusDescription(solicitud.request_status) }}</p>
+                  <p>Fecha de Solicitud: {{ solicitud.request_created_at | date:'short' }}</p>
+                  <p>Última Actualización: {{ solicitud.request_updated_at | date:'short' }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col size="12" size-md="9">
+        <div class="container mt-4">
+          <div class="d-flex justify-content-center mb-4">
+            <h5><strong>Editar paciente Pendiente</strong></h5>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <ion-item>
+                  <ion-label>Seleccionar paciente</ion-label>
+                  <ion-select id="employeeSelect" (ionChange)="onSelectEmployee($event)"
+                    placeholder="Seleccionar Empleado">
+                    <ion-select-option value="" disabled selected>Seleccionar Empleado</ion-select-option>
+                    <ion-select-option *ngFor="let empleado of empleadosPendientes" [value]="empleado.employee_id">
+                      {{ empleado.first_name }} {{ empleado.last_name }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </div>
+
+              <div *ngIf="selectedEmployee">
+                <div class="card shadow-lg p-4 mb-4">
+                  <div class="card-body">
+                    <form #empleadoForm="ngForm" (ngSubmit)="onSubmit(empleadoForm)">
+                      <div class="container mt-4">
+                        <h4>Datos Personales</h4>
+                        <hr />
+                        <div class="form-group mt-3">
+                          <label for="nombre">Nombre*</label>
+                          <input type="text" placeholder="Nombre" class="input form-control rounded-pill mb-3 p-2 px-3"
+                            name="nombre" [(ngModel)]="selectedEmployee.first_name" (input)="checkAllFieldsCompleted()"
+                            required [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+                        <div class="form-group mt-3">
+                          <label for="apellidoPaterno">Apellido Paterno*</label>
+                          <input type="text" placeholder="Apellido Paterno"
+                            class="input form-control rounded-pill mb-3 p-2 px-3" name="apellidoPaterno"
+                            [(ngModel)]="selectedEmployee.last_name" (input)="checkAllFieldsCompleted()" required
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+                        <div class="form-group mt-3">
+                          <label for="apellidoMaterno">Apellido Materno*</label>
+                          <input type="text" placeholder="Apellido Materno"
+                            class="input form-control rounded-pill mb-3 p-2 px-3" name="apellidoMaterno"
+                            [(ngModel)]="selectedEmployee.middle_name" (input)="checkAllFieldsCompleted()" required
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+                        <div class="form-group mt-3">
+                          <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                          <input type="date" placeholder="Fecha de Nacimiento"
+                            class="input form-control rounded-pill mb-3 p-2 px-3" name="fechaNacimiento"
+                            [(ngModel)]="selectedEmployee.birth_date" (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+
+
+                        <div class="form-group mt-3">
+                          <label for="lugarNacimiento">Lugar de Nacimiento</label>
+                          <input type="text" placeholder="Lugar de Nacimiento"
+                            class="input form-control rounded-pill mb-3 p-2 px-3" name="lugarNacimiento"
+                            [(ngModel)]="selectedEmployee.birth_place" (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+                        <div class="form-group mt-3">
+                          <label for="telefono">Número de Teléfono<span
+                              *ngIf="sharedService.hasPermission('Empleados', 'Aceptar solicitudes de empleados')">*</span></label>
+                          <input type="tel" placeholder="Número de Teléfono"
+                            class="input rounded-pill form-control mb-3 p-2 px-3" name="telefono"
+                            [(ngModel)]="selectedEmployee.phone_number" maxlength="10" minlength="10"
+                            (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label for="correoElectronico">Correo Electrónico<span
+                              *ngIf="sharedService.hasPermission('Empleados', 'Aceptar solicitudes de empleados')">*</span></label>
+                          <input type="email" placeholder="Correo electrónico"
+                            class="input rounded-pill form-control my-3 p-2 px-3" name="correoElectronico"
+                            [(ngModel)]="selectedEmployee.email" (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+
+
+                        <div class="form-group mt-3">
+                          <label for="sexo">Género</label>
+                          <select name="sexo" class="form-select" [(ngModel)]="selectedEmployee.gender_id"
+                            (change)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')">
+                            <option value="" disabled>Seleccionar</option>
+                            <option *ngFor="let gender of genders" [value]="gender.gender_id">{{ gender.gender_name }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label for="estadoCivil">Estado Civil</label>
+                          <select name="estadoCivil" class="form-select"
+                            [(ngModel)]="selectedEmployee.marital_status_id" (change)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')">
+                            <option value="" disabled>Seleccionar</option>
+                            <option *ngFor="let status of maritalStatuses" [value]="status.status_id">{{
+                              status.status_name }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="container mt-4">
+                        <h4>Contacto de Emergencia</h4>
+                        <hr />
+                        <div class="form-group mt-3">
+                          <label for="contactoEmergencia">Contacto de Emergencia</label>
+                          <input type="text" placeholder="Contacto de Emergencia"
+                            class="input rounded-pill form-control mb-3 p-2 px-3" name="contactoEmergencia"
+                            [(ngModel)]="selectedEmployee.emergency_contact_name" (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+
+                        <div class="form-group mt-3">
+                          <label for="numEmergencia">Número de Emergencia</label>
+                          <input type="tel" placeholder="Número de Emergencia"
+                            class="input rounded-pill form-control mb-3 p-2 px-3" name="numEmergencia"
+                            [(ngModel)]="selectedEmployee.emergency_contact_number" maxlength="10" minlength="10"
+                            (input)="checkAllFieldsCompleted()"
+                            [disabled]="sharedService.hasPermission('Empleados', 'Procesar empleados')" />
+                        </div>
+                        <div class="mt-3 text-center">
+                          <button type="submit"
+                            class="btn btn-primary rounded-pill w-75 fw-bold shadow py-2 mt-2">Actualizar
+                            solicitud paciente</button>
+                          <button (click)="enviarSolicitudPendiente(empleadoForm)"
+                            class="btn btn-success rounded-pill w-75 fw-bold shadow py-2 mt-2"
+                            [disabled]="!allFieldsCompleted">Aceptar paciente</button>
+                          <button *ngIf="sharedService.hasPermission('Empleados', 'Editar solicitudes de empleados')"
+                            (click)="eliminarSolicitud()"
+                            class="btn btn-danger rounded-pill w-75 fw-bold shadow py-2 mt-2">
+                            Eliminar Solicitud</button>
+                          <button *ngIf="sharedService.hasPermission('Empleados', 'Aceptar solicitudes de empleados')"
+                            (click)="rechazarSolicitud()"
+                            class="btn btn-warning rounded-pill w-75 fw-bold shadow py-2 mt-2">
+                            Rechazar Solicitud
+                          </button>
+                          <button (click)="selectEmployee(null)"
+                            class="btn btn-secondary rounded-pill w-75 fw-bold shadow py-2 mt-2">Cancelar</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

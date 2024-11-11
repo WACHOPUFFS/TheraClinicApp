@@ -1,0 +1,12 @@
+<div class="modal-wrapper">
+  <div class="modal-header">
+    <h2>{{ titulo }}</h2>
+    <ion-button class="close-button" fill="clear" (click)="dismiss()">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+  </div>
+  <div class="modal-content">
+    <p>{{ mensaje }}</p>
+    <ion-button expand="block" (click)="dismiss()">Cerrar</ion-button>
+  </div>
+</div>

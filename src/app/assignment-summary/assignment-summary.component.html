@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Resumen de Asignación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()" color="light">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container">
+    <div class="row justify-content-center mb-4">
+      <div class="col-12 text-center">
+        <h5 class="fw-bold">Detalles de la Asignación</h5>
+        <p class="text-muted">Revise la información antes de confirmar la asignación.</p>
+      </div>
+    </div>
+
+    <!-- Información de Asignación -->
+    <div class="card shadow-sm mb-4 p-3">
+      <div class="card-body">
+        <p><ion-text color="primary"><strong>Semana:</strong></ion-text> {{ selectedSemana?.week_number }}</p>
+        <p><ion-text color="primary"><strong>Día:</strong></ion-text> {{ selectedDia }}</p>
+        <p><ion-text color="primary"><strong>Periodo:</strong></ion-text> {{ authService.selectedPeriod?.fiscal_year }}</p>
+        <p><ion-text color="primary"><strong>Obra:</strong></ion-text> {{ selectedObra?.project_name }}</p>
+      </div>
+    </div>
+
+    <!-- Lista de Empleados Seleccionados -->
+    <div class="card shadow-sm mb-4 p-3">
+      <div class="card-body">
+        <h6 class="fw-bold mb-3"><ion-text color="primary">Empleados Seleccionados:</ion-text></h6>
+        <ion-list lines="none">
+          <ion-item *ngFor="let empleado of selectedEmpleados">
+            <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
+            <ion-label>{{ empleado.first_name }} {{ empleado.middle_name }} {{ empleado.last_name }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="d-flex justify-content-center mt-4">
+      <ion-button expand="block" color="success" class="me-2" (click)="confirmAssignment()">
+        <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Confirmar Asignación
+      </ion-button>
+      <ion-button expand="block" color="medium" (click)="closeModal()">
+        <ion-icon slot="start" name="close-circle-outline"></ion-icon> Cancelar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

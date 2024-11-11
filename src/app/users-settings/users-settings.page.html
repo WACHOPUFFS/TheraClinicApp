@@ -1,0 +1,32 @@
+<ion-split-pane contentId="main-content">
+  <!-- Contenido principal -->
+  <ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+    <ion-breadcrumbs>
+      <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+      <ion-breadcrumb routerLink="/users-settings">Configuración de usuarios</ion-breadcrumb>
+    </ion-breadcrumbs>
+    <div class="back-button" (click)="goBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </div>
+    <!-- Contenido principal de la página -->
+    <div class="main-content">
+      <div class="pt-4">
+        <h5><strong>Configuración de usuarios</strong></h5>
+      </div>
+      
+      <div class="app-grid mt-4" >
+        <a routerLink="/users-register"
+        *ngIf="sharedService.hasPermission('Configuracion de usuarios', 'Registrar, eliminar, ver y editar usuarios')">
+          <img src="/assets/icons/013-avatar-de-usuario-3.png" alt="Assign Logo" style="height: 60px;">
+          <span>Registrar Usuarios</span>
+        </a>
+        <a routerLink="/user-edit"
+        *ngIf="sharedService.hasPermission('Configuracion de usuarios', 'Editar mi usuario')">
+          <img src="/assets/icons/001-avatar-de-usuario.png" alt="Assign Logo" style="height: 60px;">
+          <span>Editar mi usuario</span>
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-split-pane>

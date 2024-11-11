@@ -1,0 +1,156 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-breadcrumbs>
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/employee-control">Control de pacientes
+    </ion-breadcrumb>
+    <ion-breadcrumb routerLink="/add-employee">Registrar solicitudes de pacientes
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <!-- Columna izquierda con contenido adicional -->
+      <ion-col size="12" size-md="3" class="left-column">
+        <div class="container mt-4">
+          <!-- Columna con la lista de solicitudes de empleado registradas en los últimos 15 días -->
+          <div class="side-content">
+            <div class="d-flex justify-content-center mb-4">
+              <h5><strong>Solicitudes Registradas (Últimos 15 días)</strong></h5>
+            </div>
+            <ion-list>
+              <ion-item *ngFor="let solicitud of solicitudes">
+                <ion-label>
+                  <h2>Folio: {{ solicitud.request_id }}</h2>
+                  <p>Paciente: {{ solicitud.full_name }}</p>
+                  <p>Estado: {{ getStatusDescription(solicitud.request_status) }}</p>
+                  <p>Fecha de Solicitud: {{ solicitud.request_created_at | date:'short' }}</p>
+                  <p>Última Actualización: {{ solicitud.request_updated_at | date:'short' }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col size="12" size-md="9">
+        <div class="container mt-4">
+          <div class="d-flex justify-content-center mb-4">
+            <h5><strong>Registrar solicitud de pacientes</strong></h5>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <div class="card shadow-lg p-4 mb-4">
+                <div class="card-body">
+                  <p class="text-center" style="font-size: 15px;"><em>Campos con un * son obligatorios para guardar la
+                    solicitud</em></p>
+                 
+                  <form #empleadoForm="ngForm" (ngSubmit)="onSubmit(empleadoForm)">
+                    <div class="container mt-4">
+                      <h4>Datos Personales</h4>
+                      <hr />
+
+                      <div class="form-group mt-3">
+                        <label for="nombre">Nombre*</label>
+                        <input type="text" placeholder="Nombre" class="input form-control rounded-pill mb-3 p-2 px-3"
+                          name="nombre" [(ngModel)]="empleado.nombre" required />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="apellidoPaterno">Apellido Paterno*</label>
+                        <input type="text" placeholder="Apellido Paterno"
+                          class="input form-control rounded-pill mb-3 p-2 px-3" name="apellidoPaterno"
+                          [(ngModel)]="empleado.apellidoPaterno" required />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="apellidoMaterno">Apellido Materno*</label>
+                        <input type="text" placeholder="Apellido Materno"
+                          class="input form-control rounded-pill mb-3 p-2 px-3" name="apellidoMaterno"
+                          [(ngModel)]="empleado.apellidoMaterno" required />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                        <input type="date" placeholder="Fecha de Nacimiento"
+                          class="input form-control rounded-pill mb-3 p-2 px-3" name="fechaNacimiento"
+                          [(ngModel)]="empleado.fechaNacimiento" />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="lugarNacimiento">Lugar de Nacimiento</label>
+                        <input type="text" placeholder="Lugar de Nacimiento"
+                          class="input form-control rounded-pill mb-3 p-2 px-3" name="lugarNacimiento"
+                          [(ngModel)]="empleado.lugarNacimiento" />
+                      </div>
+                      <div class="form-group mt-3">
+                        <label for="telefono">Número de Teléfono</label>
+                        <input type="tel" placeholder="Número de Teléfono"
+                          class="input rounded-pill form-control mb-3 p-2 px-3" name="telefono"
+                          [(ngModel)]="empleado.telefono" maxlength="10" minlength="10" />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="correoElectronico">Correo Electrónico</label>
+                        <input type="email" placeholder="Correo electrónico"
+                          class="input rounded-pill form-control mb-3 p-2 px-3" name="correoElectronico"
+                          [(ngModel)]="empleado.correoElectronico" />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="sexo">Género</label>
+                        <select class="form-select rounded-pill mb-3" name="sexo" [(ngModel)]="empleado.sexo">
+                          <option value="" disabled selected>Seleccionar</option>
+                          <option *ngFor="let gender of genders" [value]="gender.gender_id">{{ gender.gender_name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="estadoCivil">Estado Civil</label>
+                        <select class="form-select rounded-pill mb-3" name="estadoCivil"
+                          [(ngModel)]="empleado.estadoCivil">
+                          <option value="" disabled selected>Seleccionar</option>
+                          <option *ngFor="let status of maritalStatuses" [value]="status.status_id">{{
+                            status.status_name }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="container mt-4">
+                      <h4>Contacto de Emergencia</h4>
+                      <hr />
+
+                      <div class="form-group mt-3">
+                        <label for="contactoEmergencia">Contacto de Emergencia</label>
+                        <input type="text" placeholder="Contacto de Emergencia"
+                          class="input rounded-pill form-control mb-3 p-2 px-3" name="contactoEmergencia"
+                          [(ngModel)]="empleado.contactoEmergencia" />
+                      </div>
+
+                      <div class="form-group mt-3">
+                        <label for="numEmergencia">Número de Emergencia</label>
+                        <input type="tel" placeholder="Número de Emergencia"
+                          class="input rounded-pill form-control mb-3 p-2 px-3" name="numEmergencia"
+                          [(ngModel)]="empleado.numEmergencia" maxlength="10" minlength="10" />
+                      </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                      <button type="submit" class="btn btn-primary rounded-pill w-75 fw-bold shadow py-2">Guardar
+                        paciente</button>
+                    </div>
+                    <div *ngIf="allFieldsCompleted" class="mt-3 text-center">
+                      <button type="submit" class="btn btn-success rounded-pill w-75 fw-bold shadow py-2">
+                        Enviar Solicitud del paciente
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

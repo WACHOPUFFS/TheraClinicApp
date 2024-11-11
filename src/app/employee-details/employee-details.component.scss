@@ -1,0 +1,82 @@
+/* Estilo del modal completo */
+ion-modal {
+    --border-radius: 20px; /* Bordes redondeados para todo el modal */
+    --width: 95%; /* Tamaño del modal, puedes ajustar este valor */
+    --height: auto;
+    --max-width: 600px; /* Máximo ancho del modal */
+    --max-height: 90%; /* Altura máxima del modal */
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  /* Estilo de las tarjetas dentro del modal */
+  .card {
+    border-radius: 20px; /* Bordes redondeados de la tarjeta */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  }
+  
+  .card-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  /* Estilo de contenido con padding */
+  .ion-padding {
+    padding: 1.5rem;
+  }
+  
+  /* Centrar el texto */
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Margen inferior para separar secciones */
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-container {
+    text-align: center;
+  }
+  
+  .profile-picture-container {
+    position: relative;
+  }
+  
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .upload-button {
+    margin-top: 10px;
+  }
+  
+  .employee-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .employee-code {
+    color: gray;
+  }
+  
+  .folio-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: gray;
+    font-style: italic;
+    padding: 8px;
+    margin: 0;
+    text-align: left;
+  }
+  

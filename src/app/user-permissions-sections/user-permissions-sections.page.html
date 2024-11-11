@@ -1,0 +1,100 @@
+<ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+  <ion-breadcrumbs>
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/settings">Configuraciones</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/profile-settings">Configuración de perfiles</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/user-permissions-sections">Secciones visibles de los perfiles</ion-breadcrumb>
+  </ion-breadcrumbs>
+  <div class="back-button" (click)="goBack()">
+    <ion-icon name="arrow-back"></ion-icon>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center pt-4">
+          <h5><strong>Secciones visibles de los perfiles</strong></h5>
+        </div>
+        <div class="card shadow-lg p-4 mt-4">
+          <ion-item>
+            <ion-label>Filtrar por tipo de usuario</ion-label>
+            <ion-select id="userTypeSelect" [(ngModel)]="selectedUserType" (ionChange)="onUserTypeChange($event)">
+              <ion-select-option value="all">Todos</ion-select-option>
+              <ion-select-option *ngFor="let userType of userTypes" [value]="userType.levelUserName">
+                {{ userTypeNames[userType.levelUserName] || userType.levelUserName }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          
+          
+          
+
+          <ion-item>
+            <ion-label>Seleccionar usuario</ion-label>
+            <ion-select id="userSelect" [(ngModel)]="selectedUserId" (ionChange)="onUserChange($event)">
+              <ion-select-option *ngFor="let user of filteredUsers" [value]="user.id">
+                {{ user.name }}{{ user.id === authService.userId ? ' - (este usuario)' : '' }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Asignar sección</ion-label>
+            <ion-select id="sectionSelect" [(ngModel)]="selectedSection" (ionChange)="onSectionChange($event)">
+              <ion-select-option *ngFor="let section of sections" [value]="section">{{ section }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Primer conjunto de subapartados para roles diferentes de proveedor o cliente -->
+          <ion-item
+            *ngIf="subSections.length > 0 && authService.selectedRole !== 'proveedor' && authService.selectedRole !== 'cliente'">
+            <ion-label>Asignar subapartado(s)</ion-label>
+            <ion-select id="subSectionSelect" [(ngModel)]="selectedSubSections" multiple>
+              <ion-select-option *ngFor="let subSection of subSections" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Segundo conjunto de subapartados específico para proveedores -->
+          <ion-item *ngIf="subSectionsProvider.length > 0 && authService.selectedRole === 'proveedor'">
+            <ion-label>Asignar subapartado(s) para proveedor</ion-label>
+            <ion-select id="subSectionSelectProvider" [(ngModel)]="selectedSubSectionsProvider" multiple>
+              <ion-select-option *ngFor="let subSection of subSectionsProvider" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Tercer conjunto de subapartados específico para clientes -->
+          <ion-item *ngIf="subSectionsClient.length > 0 && authService.selectedRole === 'cliente'">
+            <ion-label>Asignar subapartado(s) para cliente</ion-label>
+            <ion-select id="subSectionSelectClient" [(ngModel)]="selectedSubSectionsClient" multiple>
+              <ion-select-option *ngFor="let subSection of subSectionsClient" [value]="subSection">{{ subSection
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-button expand="block" class="btn-primary mt-3" (click)="addPermission()">Añadir</ion-button>
+        </div>
+        <ion-list class="list-group mt-4">
+          <ion-accordion-group>
+            <!-- Itera sobre las secciones de permisos agrupadas -->
+            <ion-accordion *ngFor="let section of groupedPermissions">
+              <ion-item slot="header">
+                <ion-label>{{ section.section }}</ion-label>
+              </ion-item>
+              <ion-list slot="content">
+                <!-- Muestra los subapartados asociados a la sección -->
+                <ion-item *ngFor="let subSection of section.subSections">
+                  {{ subSection || 'Sin subapartado' }}
+                  <ion-button slot="end" class="btn-danger"
+                    (click)="removePermission(section.section, subSection)">Quitar</ion-button>
+                </ion-item>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+
+        </ion-list>
+      </div>
+    </div>
+  </div>
+</ion-content>

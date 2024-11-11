@@ -1,0 +1,41 @@
+.sidebar-section {
+    max-height: 90vh;
+    overflow-y: auto;
+    border-right: 1px solid #e0e0e0;
+    padding-right: 15px;
+  }
+  
+  .steps-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .table-header {
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .table-row {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .bg-primary {
+    background-color: #007bff !important;
+  }
+  
+  .text-white {
+    color: white !important;
+  }
+  
+  ion-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  ion-button {
+    --border-radius: 5px;
+    margin-top: 1rem;
+  }
+  

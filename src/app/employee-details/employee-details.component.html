@@ -1,0 +1,189 @@
+<ion-content class="ion-padding">
+  <!-- Contenedor del perfil -->
+  <div class="profile-container text-center">
+    <!-- Foto de perfil -->
+    <div class="profile-picture-container mb-4">
+      <!-- Folio de registro del empleado (request_id) -->
+     
+      <img [src]="employee.photo || 'assets/image/default-profile.png'" alt="Foto de perfil" class="profile-picture">
+      <!-- Input de archivo oculto para la foto -->
+      <input type="file" id="photo-input" (change)="onPhotoChange($event)" hidden>
+
+      <!-- Botón visible para seleccionar la foto -->
+      <ion-button class="upload-button" (click)="triggerFileInput('photo-input')">Cambiar Foto</ion-button>
+    </div>
+
+    <!-- Nombre del empleado -->
+    <h2 class="employee-name">{{ employee.full_name }}</h2>
+    <p *ngIf="employee.request_id">
+      Folio de expediente del paciente: {{ employee.request_id }}
+    </p>
+
+    <ion-button expand="block" color="secondary" (click)="downloadEmployeeData()">
+      Descargar Información del paciente
+    </ion-button>
+  </div>
+
+  <!-- Tarjeta de información general -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Información General</h5>
+    </div>
+    <div class="card-body">
+
+      <ion-list>
+        <ion-item>
+          <ion-label>Nombre</ion-label>
+          <ion-input [(ngModel)]="employee.first_name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido Paterno</ion-label>
+          <ion-input [(ngModel)]="employee.last_name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido Materno</ion-label>
+          <ion-input [(ngModel)]="employee.middle_name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Fecha de Nacimiento</ion-label>
+          <ion-input [(ngModel)]="employee.birth_date" type="date"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Lugar de Nacimiento</ion-label>
+          <ion-input [(ngModel)]="employee.birth_place"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Teléfono</ion-label>
+          <ion-input [(ngModel)]="employee.phone_number"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Correo Electrónico</ion-label>
+          <ion-input [(ngModel)]="employee.email" type="email"></ion-input>
+        </ion-item>
+        <!-- Nuevo campo de Género -->
+        <ion-item>
+          <ion-label>Género</ion-label>
+          <ion-select [(ngModel)]="employee.gender_id">
+            <ion-select-option *ngFor="let gender of genders" [value]="gender.gender_id">{{ gender.gender_name
+              }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <!-- Nuevo campo de Estado Civil -->
+        <ion-item>
+          <ion-label>Estado Civil</ion-label>
+          <ion-select [(ngModel)]="employee.marital_status_id">
+            <ion-select-option *ngFor="let status of maritalStatuses" [value]="status.status_id">{{ status.status_name
+              }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="block" color="primary" (click)="saveGeneralInfo()">Guardar Cambios de Información
+        General</ion-button>
+    </div>
+  </div>
+
+  <!-- Tarjeta de información financiera -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Información adicional</h5>
+    </div>
+    <div class="card-body">
+      <ion-list>
+        <!-- Número de Seguro Social (11 dígitos) -->
+        <ion-item>
+          <ion-label>Número de Seguro Social</ion-label>
+          <ion-input [(ngModel)]="employee.social_security_number" type="number" maxlength="11" inputmode="numeric"
+            placeholder="11 dígitos"></ion-input>
+        </ion-item>
+        <!-- Nombre del Banco (sin limitación de dígitos) -->
+        <ion-item>
+          <ion-label>Antecedentes personales patologicos</ion-label>
+          <ion-input [(ngModel)]="employee.bank_name"></ion-input>
+        </ion-item>
+        <!-- Sucursal del Banco (sin limitación de dígitos) -->
+        <ion-item>
+          <ion-label>Antecedentes personales NO patologicos</ion-label>
+          <ion-input [(ngModel)]="employee.bank_branch"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="block" color="primary" (click)="saveFinancialInfo()">Guardar Cambios de Información
+        Financiera</ion-button>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Contacto de Emergencia</h5>
+    </div>
+    <div class="card-body">
+      <ion-list>
+        <ion-item>
+          <ion-label>Contacto de Emergencia</ion-label>
+          <ion-input [(ngModel)]="employee.emergency_contact_name" placeholder="Contacto de Emergencia"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Número de Emergencia</ion-label>
+          <ion-input [(ngModel)]="employee.emergency_contact_number" type="tel" maxlength="10" minlength="10"
+            inputmode="numeric" placeholder="Número de Emergencia"></ion-input>
+        </ion-item>
+
+      </ion-list>
+      <ion-button expand="block" color="primary" (click)="saveEmergencyContact()">Guardar Contacto de
+        Emergencia</ion-button>
+
+    </div>
+  </div>
+  <!-- Tarjeta de Archivos -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Archivos del Empleado</h5>
+    </div>
+    <div class="card-body">
+      <!-- Lista de tipos de archivos esperados -->
+      <div *ngFor="let expectedFileType of expectedFileTypes" class="form-group mt-3">
+        <label>{{ getLabelForFileType(expectedFileType) }}</label>
+        <div class="d-flex align-items-center">
+          <!-- Verificar si el archivo ya ha sido subido -->
+          <ng-container *ngIf="getFileByType(expectedFileType) as file; else uploadFile">
+            <ion-button color="primary" (click)="downloadFile(file.file_path)">
+              Descargar
+            </ion-button>
+
+            <ion-button color="danger" (click)="deleteFile(file.file_id)">
+              Eliminar
+            </ion-button>
+
+            <input type="file" id="file-input-{{ file.file_id }}"
+              (change)="onFileChange($event, expectedFileType, file.file_id)" hidden>
+
+            <ion-button color="secondary" (click)="triggerFileInput('file-input-' + file.file_id)">
+              Seleccionar Archivo
+            </ion-button>
+          </ng-container>
+
+          <!-- Botón para subir archivo si no está subido -->
+          <ng-template #uploadFile>
+            <ion-button color="secondary" (click)="triggerFileInput('file-input-' + expectedFileType)">
+              Subir Archivo
+            </ion-button>
+            <input type="file" id="file-input-{{ expectedFileType }}" (change)="onFileChange($event, expectedFileType)"
+              hidden>
+          </ng-template>
+
+          <!-- Botón para subir archivo si no está subido -->
+          <ng-template #uploadFile>
+            <ion-button color="secondary" (click)="triggerFileInput('file-input-' + expectedFileType)">
+              Subir Archivo
+            </ion-button>
+            <input type="file" id="file-input-{{ expectedFileType }}" (change)="onFileChange($event, expectedFileType)"
+              hidden>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

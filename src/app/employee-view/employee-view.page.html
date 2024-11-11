@@ -1,0 +1,59 @@
+<ion-content id="main-content" [fullscreen]="true" class="ion-padding">
+  <!-- Encabezado de pasos -->
+  <ion-breadcrumbs class="steps-container">
+    <ion-breadcrumb routerLink="/home">Inicio</ion-breadcrumb>
+    <ion-breadcrumb routerLink="/empleados">Pacientes</ion-breadcrumb>
+  </ion-breadcrumbs>
+
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Detalles: Lista de Empleados con Campo de Búsqueda -->
+      <div class="col-12">
+        <!-- Campo de búsqueda -->
+        <ion-item>
+          <ion-label position="floating">Buscar pacientes</ion-label>
+          <ion-input [(ngModel)]="searchQuery" (ionInput)="buscarEmpleados()"></ion-input>
+        </ion-item>
+
+        <ion-card *ngIf="empleadosFiltrados.length > 0">
+          <ion-card-header>
+            <ion-card-title class="text-center">Pacientes</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="table-header bg-primary text-white">
+                <ion-col size="4">Nombre</ion-col>
+                <ion-col size="4">Email</ion-col>
+                <ion-col size="2">Acciones</ion-col>
+              </ion-row>
+              <ion-row *ngFor="let empleado of empleadosFiltrados" class="table-row">
+                <ion-col size="4">{{ empleado.first_name }} {{ empleado.middle_name}} {{ empleado.last_name }}</ion-col>
+                <ion-col size="4">{{ empleado.email }}</ion-col>
+                <ion-col size="2">
+                  <ion-button (click)="viewEmployeeDetails(empleado.employee_id)" fill="outline" size="small">Ver detalles</ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+        
+        <ion-card *ngIf="empleadosFiltrados.length === 0">
+          <ion-card-content class="text-center">
+            No se encontraron pacientes.
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<style>
+  /* Estilo para mejorar la visibilidad de la lista de empleados */
+  .table-header {
+    font-weight: bold;
+    text-align: center;
+  }
+  .table-row {
+    text-align: center;
+  }
+</style>
